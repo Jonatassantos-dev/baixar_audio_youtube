@@ -11,7 +11,7 @@ from pytubefix.cli import on_progress
 # CONFIGURAÇÕES
 # ============================================================
 
-URL = "https://www.youtube.com/watch?v=3IhZGJJ4Gk8&t=3170s"
+URL = "https://www.youtube.com/watch?v=Cl9vD_g7G_w&t=6166s"
 
 # Informe None para baixar o áudio completo
 INICIO = "36:44"
