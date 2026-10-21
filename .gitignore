@@ -1,2 +1,14 @@
-.env
+# Vídeos e áudios locais
+static/videos/
+videos/
+downloads/
+
+# Arquivos Python temporários
+__pycache__/
+*.py[cod]
+
+# Ambiente virtual
+.venv/
+venv/
+
 .dockerignore
