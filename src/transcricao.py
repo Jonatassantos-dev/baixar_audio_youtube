@@ -6,7 +6,7 @@ class TranscriptionService:
         # Pasta onde estão os áudios
         self.pasta_downloads = os.listdir(os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
-            "downloads"
+            "audios"
         ))
 
         self.arquivo_audio = self.pasta_downloads[0] if self.pasta_downloads else None
