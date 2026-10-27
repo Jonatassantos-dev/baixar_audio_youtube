@@ -1,6 +1,6 @@
-# Vídeos e áudios locais
-videos/
-audios/
+culto.mp4
+transcricao.txt
+audio_extraido.mka
 
 # Arquivos Python temporários
 __pycache__/
