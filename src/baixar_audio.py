@@ -1,11 +1,9 @@
 import re
 import subprocess
+from pathlib import Path
 
 class BaixarAudioService:
-    def __init__(self, audio_repository):
-        self.audio_repository = audio_repository
-
-    def tempo_para_segundos(self,tempo):
+    def tempo_para_segundos(self, tempo: str) -> int:
 
         if not re.fullmatch(r"\d{1,}:\d{2}:\d{2}|\d{1,}:\d{2}", tempo):
             raise ValueError(
@@ -26,7 +24,11 @@ class BaixarAudioService:
 
         return horas * 3600 + minutos * 60 + segundos
 
-    def extrair_audio(self,entrada_video,tempo_inicio,tempo_fim,saida_audio):
+    def extrair_audio(
+        self, entrada_video: Path, tempo_inicio: str, tempo_fim: str, saida_audio: Path
+    ) -> Path:
+        entrada_video = Path(entrada_video)
+        saida_audio = Path(saida_audio)
 
         # Verifica se o FFmpeg está instalado
         try:
@@ -57,7 +59,7 @@ class BaixarAudioService:
             )
 
         # Cria a pasta de saída
-        saida_audio.mkdir(parents=True, exist_ok=True)
+        saida_audio.parent.mkdir(parents=True, exist_ok=True)
 
         # Extrai somente o áudio, sem recodificar
         comando = [
@@ -70,7 +72,7 @@ class BaixarAudioService:
             "-map", "0:a:0",
             "-vn",
             "-c:a", "copy",
-            str(saida_audio)
+            str(saida_audio.resolve())
         ]
 
         print(f"Vídeo: {entrada_video}")
@@ -89,4 +91,4 @@ class BaixarAudioService:
 
         print("\nExtração concluída!")
         print(f"Arquivo salvo em: {saida_audio.resolve()}")
-
+        return saida_audio.resolve()

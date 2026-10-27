@@ -1,17 +1,21 @@
-import os
+from pathlib import Path
+
 from faster_whisper import WhisperModel
 
 class TranscriptionService:
-    def __init__(self):
-        # Pasta onde estão os áudios
-        self.pasta_downloads = os.listdir(os.path.join(
-            os.path.dirname(os.path.abspath(__file__)),
-            "audios"
-        ))
+    def __init__(self, arquivo_audio: Path | None = None):
+        static_dir = Path(__file__).resolve().parent.parent / "static"
+        pasta_audios = static_dir / "audios"
+        pasta_audios.mkdir(parents=True, exist_ok=True)
 
-        self.arquivo_audio = self.pasta_downloads[0] if self.pasta_downloads else None
+        if arquivo_audio is None:
+            arquivos_audio = sorted(
+                caminho for caminho in pasta_audios.iterdir() if caminho.is_file()
+            )
+            arquivo_audio = arquivos_audio[0] if arquivos_audio else None
 
-        self.arquivo_txt = "transcricao.txt"
+        self.arquivo_audio = Path(arquivo_audio) if arquivo_audio else None
+        self.arquivo_txt = static_dir / "transcricao" / "transcricao.txt"
 
         # ============================================================
         # MODELO WHISPER
@@ -31,7 +35,7 @@ class TranscriptionService:
     def transcrever_audio(self):
         if not self.arquivo_audio:
             raise FileNotFoundError(
-                "Nenhum arquivo de áudio encontrado na pasta 'downloads'."
+                "Nenhum arquivo de áudio foi informado ou encontrado em 'static/audios'."
             )
 
         # ============================================================
@@ -41,7 +45,7 @@ class TranscriptionService:
         print("\nIniciando transcrição...\n")
 
         segments, info = self.model.transcribe(
-            self.arquivo_audio,
+            str(self.arquivo_audio),
             language="pt",
             beam_size=5,
             vad_filter=True
@@ -51,11 +55,8 @@ class TranscriptionService:
         # SALVA SOMENTE O TEXTO
         # ============================================================
 
-        with open(
-            self.arquivo_txt,
-            "w",
-            encoding="utf-8"
-        ) as arquivo:
+        self.arquivo_txt.parent.mkdir(parents=True, exist_ok=True)
+        with self.arquivo_txt.open("w", encoding="utf-8") as arquivo:
 
             for segment in segments:
                 texto = segment.text.strip()

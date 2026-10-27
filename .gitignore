@@ -1,7 +1,6 @@
 # Vídeos e áudios locais
-static/videos/
 videos/
-downloads/
+audios/
 
 # Arquivos Python temporários
 __pycache__/
